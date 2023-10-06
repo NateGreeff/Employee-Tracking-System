@@ -1,5 +1,6 @@
 const inquirer = require('inquirer')
 const { mainMenuQuest } = require('./lib/questions')
+const { Employee, Role, Department } = require('./models')
 
 function init() {
   inquirer
@@ -8,7 +9,13 @@ function init() {
       console.log(`You selected: ${answers.mainMenu}`);
       switch (answers.mainMenu) {
         case 'View All Employees':
-          console.log();
+          Employee.findAll()
+            .then((employees) => {
+              console.log(employees);
+            })
+            .catch((error) => {
+              console.error(error);
+            });
           break;
         case 'Add Employee':
           console.log();
