@@ -3,11 +3,12 @@ const inquirer = require('inquirer')
 const { Employee, Role, Department } = require('./models')
 
 function init() {
+    console.log('\nWelcome to the Employee Tracker!\n');
     inquirer.prompt([
         {
             type: 'list',
             name: 'action',
-            message: 'What would you like to do?',
+            message: 'What would you like to do?\n',
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Update an employee', 'Delete a Department', 'Delete a employee role', 'Delete an Employee', 'Exit']
         }
     ])
