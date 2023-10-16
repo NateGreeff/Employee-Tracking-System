@@ -20,15 +20,15 @@ Employee.belongsTo(Role, {
     foreignKey: 'role_id'
 });
 
-Employee.belongsTo(Employee, {
+Employee.belongsTo(Employee, { 
+    as: 'manager', 
     foreignKey: 'manager_id'
 });
 
 Employee.hasMany(Employee, {
+    as: 'subordinates',
     foreignKey: 'manager_id',
     onDelete: 'CASCADE'
 });
-
-
 
 module.exports = { Department, Role, Employee };
