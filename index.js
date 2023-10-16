@@ -8,7 +8,7 @@ function init() {
             type: 'list',
             name: 'action',
             message: 'What would you like to do?',
-            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Exit']
+            choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Update an employee', 'Delete a Department', 'Delete a employee role', 'Delete an Employee', 'Exit']
         }
     ])
     .then((response) => {
@@ -33,6 +33,18 @@ function init() {
                 break
             case 'Update an employee role':
                 updateEmployeeRole()
+                break
+            case 'Update an employee':
+                updateEmployee()
+                break
+            case 'Delete a Department':
+                deleteDepartment()
+                break
+            case 'Delete a employee role':
+                deleteRole()
+                break
+            case 'Delete an Employee':
+                deleteEmployee()
                 break
             case 'Exit':
                 process.exit()
@@ -157,6 +169,94 @@ function updateEmployeeRole() {
         Employee.update({ role_id: response.role_id }, { where: { id: response.employee_id } })
         .then(() => {
             console.log('Employee role updated successfully!')
+            init()
+        })
+    })
+}
+
+function updateEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employee_id',
+            message: 'What is the id of the employee you would like to update?'
+        },
+        {
+            type: 'input',
+            name: 'first_name',
+            message: 'What is the new first name of the employee?'
+        },
+        {
+            type: 'input',
+            name: 'last_name',
+            message: 'What is the new last name of the employee?'
+        },
+        {
+            type: 'input',
+            name: 'role_id',
+            message: 'What is the new role id of the employee?'
+        },
+        {
+            type: 'input',
+            name: 'manager_id',
+            message: 'What is the new manager id of the employee?'
+        }
+    ])
+    .then((response) => {
+        Employee.update({ first_name: response.first_name, last_name: response.last_name, role_id: response.role_id, manager_id: response.manager_id }, { where: { id: response.employee_id } })
+        .then(() => {
+            console.log('Employee updated successfully!')
+            init()
+        })
+    })
+}
+
+function deleteDepartment() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'department_id',
+            message: 'What is the id of the department you would like to delete?'
+        }
+    ])
+    .then((response) => {
+        Department.destroy({ where: { id: response.department_id } })
+        .then(() => {
+            console.log('Department deleted successfully!')
+            init()
+        })
+    })
+}
+
+function deleteRole() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'role_id',
+            message: 'What is the id of the role you would like to delete?'
+        }
+    ])
+    .then((response) => {
+        Role.destroy({ where: { id: response.role_id } })
+        .then(() => {
+            console.log('Role deleted successfully!')
+            init()
+        })
+    })
+}
+
+function deleteEmployee() {
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'employee_id',
+            message: 'What is the id of the employee you would like to delete?'
+        }
+    ])
+    .then((response) => {
+        Employee.destroy({ where: { id: response.employee_id } })
+        .then(() => {
+            console.log('Employee deleted successfully!')
             init()
         })
     })
