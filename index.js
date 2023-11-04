@@ -86,9 +86,9 @@ function addDepartment() {
         }
     ])
     .then((response) => {
-        Department.create(response)
+        Department.create({ name: response.department_name })
         .then(() => {
-            console.log('Department added successfully!')
+            console.log(`\nDepartment "${response.department_name}" added successfully!`)
             init()
         })
     })
@@ -115,7 +115,7 @@ function addRole() {
     .then((response) => {
         Role.create(response)
         .then(() => {
-            console.log('Role added successfully!')
+            console.log(`\nRole "${response.title}" added successfully!`)
             init()
         })
     })
@@ -147,7 +147,7 @@ function addEmployee() {
     .then((response) => {
         Employee.create(response)
         .then(() => {
-            console.log('Employee added successfully!')
+            console.log(`\nEmployee "${response.first_name} ${response.last_name}" added successfully!`)
             init()
         })
     })
