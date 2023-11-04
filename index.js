@@ -8,7 +8,7 @@ function init() {
         {
             type: 'list',
             name: 'action',
-            message: 'What would you like to do?\n',
+            message: '\nWhat would you like to do?\n',
             choices: ['View all departments', 'View all roles', 'View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role', 'Update an employee', 'Delete a Department', 'Delete a employee role', 'Delete an Employee', 'Exit']
         }
     ])
@@ -82,7 +82,7 @@ function addDepartment() {
         {
             type: 'input',
             name: 'department_name',
-            message: 'What is the name of the department you would like to add?'
+            message: '\nWhat is the name of the department you would like to add?'
         }
     ])
     .then((response) => {
@@ -99,17 +99,17 @@ function addRole() {
         {
             type: 'input',
             name: 'title',
-            message: 'What is the title of the role you would like to add?'
+            message: '\nWhat is the title of the role you would like to add?'
         },
         {
             type: 'input',
             name: 'salary',
-            message: 'What is the salary of the role you would like to add?'
+            message: '\nWhat is the salary of the role you would like to add?'
         },
         {
             type: 'input',
             name: 'department_id',
-            message: 'What is the department id of the role you would like to add?'
+            message: '\nWhat is the department id of the role you would like to add?'
         }
     ])
     .then((response) => {
@@ -126,22 +126,22 @@ function addEmployee() {
         {
             type: 'input',
             name: 'first_name',
-            message: 'What is the first name of the employee you would like to add?'
+            message: '\nWhat is the first name of the employee you would like to add?'
         },
         {
             type: 'input',
             name: 'last_name',
-            message: 'What is the last name of the employee you would like to add?'
+            message: '\nWhat is the last name of the employee you would like to add?'
         },
         {
             type: 'input',
             name: 'role_id',
-            message: 'What is the role id of the employee you would like to add?'
+            message: '\nWhat is the role id of the employee you would like to add?'
         },
         {
             type: 'input',
             name: 'manager_id',
-            message: 'What is the manager id of the employee you would like to add?'
+            message: '\nWhat is the manager id of the employee you would like to add?'
         }
     ])
     .then((response) => {
@@ -158,12 +158,12 @@ function updateEmployeeRole() {
         {
             type: 'input',
             name: 'employee_id',
-            message: 'What is the id of the employee whose role you would like to update?'
+            message: '\nWhat is the id of the employee whose role you would like to update?'
         },
         {
             type: 'input',
             name: 'role_id',
-            message: 'What is the new role id of the employee?'
+            message: '\nWhat is the new role id of the employee?'
         }
     ])
     .then((response) => {
@@ -180,27 +180,27 @@ function updateEmployee() {
         {
             type: 'input',
             name: 'employee_id',
-            message: 'What is the id of the employee you would like to update?'
+            message: '\nWhat is the id of the employee you would like to update?'
         },
         {
             type: 'input',
             name: 'first_name',
-            message: 'What is the new first name of the employee?'
+            message: '\nWhat is the new first name of the employee?'
         },
         {
             type: 'input',
             name: 'last_name',
-            message: 'What is the new last name of the employee?'
+            message: '\nWhat is the new last name of the employee?'
         },
         {
             type: 'input',
             name: 'role_id',
-            message: 'What is the new role id of the employee?'
+            message: '\nWhat is the new role id of the employee?'
         },
         {
             type: 'input',
             name: 'manager_id',
-            message: 'What is the new manager id of the employee?'
+            message: '\nWhat is the new manager id of the employee?'
         }
     ])
     .then((response) => {
@@ -217,14 +217,24 @@ function deleteDepartment() {
         {
             type: 'input',
             name: 'department_id',
-            message: 'What is the id of the department you would like to delete?'
+            message: '\nWhat is the id of the department you would like to delete?'
         }
     ])
     .then((response) => {
-        Department.destroy({ where: { id: response.department_id } })
-        .then(() => {
-            console.log('Department deleted successfully!')
-            init()
+        Role.findAll({ where: { department_id: response.department_id } })
+        .then((roles) => {
+            roles.forEach((role) => {
+                Employee.destroy({ where: { role_id: role.id } });
+            });
+
+            Role.destroy({ where: { department_id: response.department_id } })
+            .then(() => {
+                Department.destroy({ where: { id: response.department_id } })
+                .then(() => {
+                    console.log('Department, associated roles, and employees deleted successfully!')
+                    init()
+                })
+            })
         })
     })
 }
@@ -234,14 +244,17 @@ function deleteRole() {
         {
             type: 'input',
             name: 'role_id',
-            message: 'What is the id of the role you would like to delete?'
+            message: '\nWhat is the id of the role you would like to delete?'
         }
     ])
     .then((response) => {
-        Role.destroy({ where: { id: response.role_id } })
+        Employee.destroy({ where: { role_id: response.role_id } })
         .then(() => {
-            console.log('Role deleted successfully!')
-            init()
+            Role.destroy({ where: { id: response.role_id } })
+            .then(() => {
+                console.log('Role and associated employees deleted successfully!')
+                init()
+            })
         })
     })
 }
@@ -251,7 +264,7 @@ function deleteEmployee() {
         {
             type: 'input',
             name: 'employee_id',
-            message: 'What is the id of the employee you would like to delete?'
+            message: '\nWhat is the id of the employee you would like to delete?'
         }
     ])
     .then((response) => {
